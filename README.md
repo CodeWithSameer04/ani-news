@@ -35,4 +35,4 @@ This project is built using modern Android development standards and Clean Archi
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/yourusername/anime-tracker.git](https://github.com/yourusername/anime-tracker.git)
+   git clone [https://github.com/CodeWithSameer04/anime-tracker.git](https://github.com/CodeWithSameer04/anime-tracker.git)
