@@ -11,6 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,6 +25,16 @@ fun SettingsScreen(
     val themeMode by viewModel.themeMode.collectAsState()
     val defaultStartScreen by viewModel.defaultStartScreen.collectAsState()
     val enableNotifications by viewModel.enableNotifications.collectAsState()
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            viewModel.setEnableNotifications(true)
+        } else {
+            viewModel.setEnableNotifications(false)
+        }
+    }
 
     var showThemeDialog by remember { mutableStateOf(false) }
     var showStartScreenDialog by remember { mutableStateOf(false) }
@@ -74,7 +88,13 @@ fun SettingsScreen(
                     trailingContent = {
                         Switch(
                             checked = enableNotifications,
-                            onCheckedChange = { viewModel.setEnableNotifications(it) }
+                            onCheckedChange = { checked ->
+                                if (checked && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                } else {
+                                    viewModel.setEnableNotifications(checked)
+                                }
+                            }
                         )
                     }
                 )

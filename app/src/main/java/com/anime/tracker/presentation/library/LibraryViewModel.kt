@@ -4,7 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anime.tracker.domain.model.Anime
 import com.anime.tracker.domain.usecase.*
+import com.anime.tracker.worker.NotificationScheduler
+import com.anime.tracker.data.repository.SettingsPreferencesManager
+import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +19,9 @@ class LibraryViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val addCategoryUseCase: AddCategoryUseCase,
     private val toggleWatchlistUseCase: ToggleWatchlistUseCase,
-    private val updateAnimeCategoryUseCase: UpdateAnimeCategoryUseCase
+    private val updateAnimeCategoryUseCase: UpdateAnimeCategoryUseCase,
+    private val preferencesManager: SettingsPreferencesManager,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _selectedTabIndex = MutableStateFlow(0)
@@ -45,12 +51,18 @@ class LibraryViewModel @Inject constructor(
                 toggleWatchlistUseCase.execute(anime)
             }
             updateAnimeCategoryUseCase(anime.id, category ?: "Default")
+
+            // Schedule notification if enabled
+            if (preferencesManager.enableNotifications.first()) {
+                NotificationScheduler.scheduleAiringNotification(context, anime)
+            }
         }
     }
     
     fun removeFromWatchlist(id: Int) {
         viewModelScope.launch {
             toggleWatchlistUseCase.execute(Anime(id, "", "", "", null, null))
+            NotificationScheduler.cancelNotification(context, id)
         }
     }
 }

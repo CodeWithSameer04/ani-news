@@ -45,6 +45,11 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.LaunchedEffect
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -64,6 +69,21 @@ class MainActivity : ComponentActivity() {
                 1 -> false
                 2 -> true
                 else -> isSystemInDarkTheme()
+            }
+
+            // Android 13+ Notification Permission Request
+            val permissionLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.RequestPermission()
+            ) { isGranted ->
+                if (!isGranted) {
+                    // Handle denial - maybe disable notifications in settings
+                }
+            }
+
+            LaunchedEffect(Unit) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
             }
 
             AnimeTrackerTheme(darkTheme = darkTheme) {
