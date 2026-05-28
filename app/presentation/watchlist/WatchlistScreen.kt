@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.anime.tracker.domain.model.Anime
@@ -87,6 +88,22 @@ fun WatchlistItem(
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(anime.title, style = MaterialTheme.typography.titleMedium, maxLines = 1)
+
+                if (anime.status.equals("RELEASING", ignoreCase = true) && (anime.nextEpisode ?: 1) > 1) {
+                    Surface(
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        shape = MaterialTheme.shapes.extraSmall,
+                        modifier = Modifier.padding(vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = "Recently Aired: Ep ${anime.nextEpisode!! - 1}",
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
 
                 if (anime.airingAt != null && anime.nextEpisode != null) {
                     Text("Episode: ${anime.nextEpisode}", style = MaterialTheme.typography.bodyMedium)

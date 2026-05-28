@@ -37,6 +37,9 @@ import com.anime.tracker.presentation.settings.SettingsScreen
 import com.anime.tracker.presentation.settings.SettingsViewModel
 import com.anime.tracker.presentation.more.MoreScreen
 import com.anime.tracker.presentation.more.MoreViewModel
+import com.anime.tracker.presentation.more.DataStorageScreen
+import com.anime.tracker.presentation.more.StatisticsScreen
+import com.anime.tracker.presentation.more.CategoriesScreen
 import com.anime.tracker.presentation.search.SearchScreen
 import com.anime.tracker.presentation.search.SearchViewModel
 import com.anime.tracker.presentation.theme.AnimeTrackerTheme
@@ -166,8 +169,26 @@ fun MainShell(
             composable(Screen.More.route) { 
                 MoreScreen(
                     viewModel = moreViewModel,
-                    onNavigateToSettings = { navController.navigate(Screen.Settings.route) }
+                    onNavigateToSettings = { navController.navigate(Screen.Settings.route) },
+                    onNavigateToStorage = { navController.navigate(Screen.DataStorage.route) },
+                    onNavigateToStats = { navController.navigate(Screen.Statistics.route) },
+                    onNavigateToCategories = { navController.navigate(Screen.Categories.route) }
                 ) 
+            }
+            composable(Screen.DataStorage.route) {
+                DataStorageScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Screen.Statistics.route) {
+                StatisticsScreen(
+                    viewModel = moreViewModel,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Screen.Categories.route) {
+                CategoriesScreen(
+                    viewModel = moreViewModel,
+                    onBack = { navController.popBackStack() }
+                )
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(
