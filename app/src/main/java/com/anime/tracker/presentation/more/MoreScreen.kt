@@ -51,7 +51,9 @@ fun MoreScreen(
                     Text("Tracking ${stats.animeCount} anime across ${stats.categoryCount} categories") 
                 },
                 leadingContent = { Icon(Icons.Default.BarChart, contentDescription = null) },
-                modifier = Modifier.padding(vertical = 4.dp)
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+                    .clickable { onNavigateToStats() }
             )
 
             HorizontalDivider()
@@ -60,14 +62,18 @@ fun MoreScreen(
                 headlineContent = { Text("Categories") },
                 supportingContent = { Text("Manage custom folders") },
                 leadingContent = { Icon(Icons.Default.Folder, contentDescription = null) },
-                modifier = Modifier.padding(vertical = 4.dp)
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+                    .clickable { onNavigateToCategories() }
             )
 
             ListItem(
                 headlineContent = { Text("Data and storage") },
                 supportingContent = { Text("Manage database and cache") },
                 leadingContent = { Icon(Icons.Default.Storage, contentDescription = null) },
-                modifier = Modifier.padding(vertical = 4.dp)
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+                    .clickable { onNavigateToStorage() }
             )
 
             ListItem(

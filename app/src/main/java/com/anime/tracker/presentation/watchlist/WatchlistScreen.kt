@@ -198,6 +198,23 @@ fun WatchlistGridCard(
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold
                 )
+                
+                if (anime.status.equals("RELEASING", ignoreCase = true) && (anime.nextEpisode ?: 1) > 1) {
+                    Surface(
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        shape = MaterialTheme.shapes.extraSmall,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = "Recently Aired: Ep ${anime.nextEpisode!! - 1}",
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
                 if (anime.nextEpisode != null) {
                     Text(
                         text = "Episode ${anime.nextEpisode}",

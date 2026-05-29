@@ -134,6 +134,21 @@ fun AnimeDetailScreen(
                                         color = MaterialTheme.colorScheme.primary,
                                         fontWeight = FontWeight.Bold
                                     )
+                                    if (details.anime.status == "RELEASING" && (details.anime.nextEpisode ?: 1) > 1) {
+                                        Surface(
+                                            color = MaterialTheme.colorScheme.tertiaryContainer,
+                                            shape = MaterialTheme.shapes.extraSmall,
+                                            modifier = Modifier.padding(vertical = 4.dp)
+                                        ) {
+                                            Text(
+                                                text = "Recently Aired: Ep ${details.anime.nextEpisode!! - 1}",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    }
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
                                         text = "Airing in: ",
@@ -167,7 +182,11 @@ fun AnimeDetailScreen(
                     }
 
                     items(details.schedule.sortedByDescending { it.airingAt }) { episode ->
-                        ScheduleItem(episode)
+                        val isRecentlyAired = details.anime.status == "RELEASING" && 
+                                details.anime.nextEpisode != null && 
+                                episode.episode == details.anime.nextEpisode - 1
+                        
+                        ScheduleItem(episode, isRecentlyAired)
                     }
                 }
             }
@@ -278,19 +297,39 @@ fun CategorySelectionItem(
 }
 
 @Composable
-fun ScheduleItem(episode: AiringEpisode) {
+fun ScheduleItem(episode: AiringEpisode, isRecentlyAired: Boolean) {
     ListItem(
-        headlineContent = { Text("Episode ${episode.episode}", fontWeight = FontWeight.Medium) },
+        headlineContent = { 
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Episode ${episode.episode}", fontWeight = FontWeight.Medium)
+                if (isRecentlyAired) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Surface(
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        shape = MaterialTheme.shapes.extraSmall
+                    ) {
+                        Text(
+                            text = "RECENTLY AIRED",
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                }
+            }
+        },
         supportingContent = { Text(formatToLocalTimeDetailed(episode.airingAt)) },
         leadingContent = {
             Surface(
                 shape = MaterialTheme.shapes.small,
-                color = MaterialTheme.colorScheme.secondaryContainer
+                color = if (isRecentlyAired) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondaryContainer
             ) {
                 Text(
                     "#${episode.episode}",
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelSmall,
+                    color = if (isRecentlyAired) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
         }

@@ -225,18 +225,34 @@ fun TachiyomiCard(
 
             // Episode Badge
             if (anime.nextEpisode != null) {
-                Surface(
-                    color = Color.Black.copy(alpha = 0.6f),
-                    shape = RoundedCornerShape(bottomEnd = 4.dp),
-                    modifier = Modifier.align(Alignment.TopStart)
-                ) {
-                    Text(
-                        text = "Ep ${anime.nextEpisode}",
-                        color = Color.White,
-                        fontSize = 10.sp,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                        fontWeight = FontWeight.Bold
-                    )
+                Column(modifier = Modifier.align(Alignment.TopStart)) {
+                    Surface(
+                        color = Color.Black.copy(alpha = 0.6f),
+                        shape = RoundedCornerShape(bottomEnd = 4.dp)
+                    ) {
+                        Text(
+                            text = "Ep ${anime.nextEpisode}",
+                            color = Color.White,
+                            fontSize = 10.sp,
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    if (anime.status.equals("RELEASING", ignoreCase = true) && anime.nextEpisode > 1) {
+                        Surface(
+                            color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.9f),
+                            shape = RoundedCornerShape(bottomEnd = 4.dp),
+                            modifier = Modifier.padding(top = 2.dp)
+                        ) {
+                            Text(
+                                text = "Aired: ${anime.nextEpisode - 1}",
+                                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                fontSize = 9.sp,
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp),
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        }
+                    }
                 }
             }
 
